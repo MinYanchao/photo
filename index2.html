@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>图片的有序预加载</title>
+  <style>
+    html,body{
+      height: 100%;
+    }
+    .box{
+      text-align: center;
+    }
+    .img{
+      width: 900px;
+    }
+    .btn{
+      text-decoration: none;
+      padding: 10px;
+      border: 1px solid #eeeeee;
+      border-radius: 5px;
+      color: #131313;
+      margin: 20px 29px;
+    }
+    .progress{
+      margin-top: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img class="img" src="img/1.jpeg" alt="">
+    <p>
+      <a href="#" class="btn" data-content="prev">上一张</a>
+      <a href="#" class="btn" data-content="next">下一张</a>
+    </p>
+
+  </div>
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/preload.js"></script>
+  <script>
+    // var imgs = [];
+    // for(var i =0 ;i<=5;i++){
+    //   imgs[i] ='img/'+ (i+1) +'.jpeg'
+    // }
+    // console.log(imgs)
+    // var len = imgs.length,
+    //     count = 0,
+    //     index = 0;
+    // load();
+    // function load(){
+    //   var imgObj = new Image();
+    //   $(imgObj).on('load error',function(){
+    //     if(count>=en){
+
+    //     }else{
+    //       load()
+    //     }
+    //     count++
+    //   })
+    //   imgObj.src = imgs[count]
+    // }
+    // $(".btn").on('click',function(e){
+    //   if( "prev" === $(this).data('content')){
+    //     index = Math.max(0,--index)
+    //   }else{
+    //     index = Math.min(len - 1,++index)
+    //   }
+    //   $(".img").attr('src',imgs[index])
+    // })
+
+    var imgs = [];
+    for(var i =0 ;i<=5;i++){
+      imgs[i] ='img/'+ (i+1) +'.jpeg'
+    }
+    console.log(imgs)
+    var len = imgs.length,
+        index = 0;
+    
+    $.Preload(imgs,{
+      order:'ordered'
+    })
+    $(".btn").on('click',function(e){
+      if( "prev" === $(this).data('content')){
+        index = Math.max(0,--index)
+      }else{
+        index = Math.min(len - 1,++index)
+      }
+      $(".img").attr('src',imgs[index])
+    })
+  </script>
+</body>
+</html>
