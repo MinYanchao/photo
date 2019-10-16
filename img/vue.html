@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <div>content</div>
+    <div>{{fullName}}</div><!--调用的是computed中的fullName  显示结果就是 Mike Wang -->
+    <div>{{fullName()}}</div><!--调用的是methods中的fullName  显示结果就是 Mike Wang -->
+    <div>{{qName}}</div><!--调用的是computed中的qName -->
+
+  </div>
+  <script src="js/vue.js"></script>
+  <script>
+    var vm = new Vue({
+      el:'#app',
+      data:{
+        content:"hell world",
+        firstName:'Mike',
+        lastName:'Wang',
+        allName:'Mike Wang',
+        arr : [1,2,3,4,5]
+      },
+
+      // Vue中可使用的对数组进行改变的方法
+      // push pop shift unshift splice sort reverse
+      // push 往数组中最后添加一项
+      // pop 删除数组中的最后一项
+      // shift 删除数组中的第一项
+      // unshift 可以往数组中的第一项添加内容
+      // splice 数组的截取
+        //  arr.splice(1,1,{id:"333",text:"dell"}) =>指找到数组中下标为1的删除1项并且插入{id:"333",text:"dell"}  其最终结果就是 改变了数组中下边为1 的值
+      // sort 数组的排序
+      // reverse 数组的取反
+// 还有一种对数组的处理 set  
+      // Vue.set(vm.data,"address","beijing") 在data对象中的最后加上address:"beijing"
+      // vm.$set(vm.data,"address","beijing") 在data对象中的最后加上address:"beijing"
+
+      // Vue.set(vm.arr,1,5) => 将arr数组中下标为1 的值改为5
+      // vm.$set(vm.arr,2,10) => 将arr数组中下标为2 的值改为10
+
+
+
+
+
+      // 当一种功能用 computed methods 和 watch 都能实现的时候，优先考虑使用computed
+      // 计算属性
+      computed:{
+        fullName:function(){
+          console.log("computed 有缓存机制，也就是说当页面一遍又一遍的刷新时，this.firstName 与 this.lastName没有发生改变的时候fullName就不会重新执行，只有当它依赖的两个值中的任何一个或全部变化是才会执行")
+          return this.firstName + " " +this.lastName
+        },
+        // 计算属性的 setter 和 getter
+        qName:{
+          get:function(){
+            // 当firstName与lastName 的值发生改变的话，qName 也随之变化
+            return this.firstName + " " +this.lastName
+          },
+          set:function(value){
+            // 当直接设置qName的值时，value会返回所设置的值，
+            // 例如： 执行vm.qName = 'Jone Lee';的时候value等于 'Jone Lee'
+            // 通过对数据的处理后，设置firstName与lastName的值后，qName随之变化
+            var arr = value.split(" ");
+            this.firstName = arr[0];
+            this.lastName = arr[1];
+          }
+        }
+      },
+      // 方法
+      methods:{
+        fullName:function(){
+          console.log("methods 中的方法 是没有缓存机制的 只要刷新页面就会重新执行这个 fullName() 这个方法")
+          return this.firstName + " " +this.lastName
+        }
+      },
+      // 监听器
+      watch:{
+        // allName 是有 firstName 和 lastName 组成的，此处监听firstName与lastName，当firstName与lastName发生变化时，allName也随之变；
+        firstName:function(){
+          console.log("当firstName发生变化时，allName由 firstName 与 lastName 重新组合")
+          this.allName = this.firstName + ' ' + this.lastName 
+        },
+        lastName:function(){
+          console.log("当lastName发生变化时，allName由 firstName 与 lastName 重新组合")
+          this.allName = this.firstName + ' ' + this.lastName 
+        }
+      },
+      // 生命周期函数就是Vue实例在某一个时间点会自动执行的函数
+      beforeCreate:function(){
+        console.log("当创建一个Vue实例后，当Vue实例进行一个基础的初始化后执行")
+      },
+      created:function(){
+        console.log("当Vue实例处理完外部的注入和双向的绑定后执行")
+      },
+      beforeMount:function(){
+        console.log(this.$el)// => el中没有任何内容
+        console.log("在判断是否有template模板之后，模板与数据相结合即将挂在到页面上的一瞬间之前执行")
+      },
+      mounted:function(){
+        console.log(this.$el)// => el中显示Hello World
+        console.log("模板与数据相结合且挂载显示到页面上之后执行")
+      },
+      beforeDestroy:function(){
+        // vm.$destroy()  这个命令就销毁当前vm实例
+        console.log("当发命令销毁实例且没有销毁之前执行")
+      },
+      destroyed:function(){
+        console.log("当实例完全被销毁后执行")
+      },
+      beforeUpdate:function(){
+        console.log("当数据发生变化且没有显示在页面之前执行")
+      },
+      uptaded:function(){
+        console.log("当数据发生变化显示在页面之后执行")
+      }
+    })
+  </script>
+</body>
+</html>
